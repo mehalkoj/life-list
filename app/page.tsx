@@ -1,28 +1,27 @@
 import prisma from './lib/prisma';
-import Signup from './components/Signup'
 
+interface UserName {
+  name: string | null;
+  id: number | null; 
+}
 
-// Fetch posts data (Server-side)
-const getData = async () => {
-  const posts = await prisma.post.findMany();
-  return posts;
-};
-
-const PostsPage = async () => {
-  const posts = await getData();
-};
-
-
-
-
-export default function Page(){
-
+export default async function UsersPage(){
+  const users: UserName[] = await prisma.user.findMany({
+    select: {
+      name: true,
+      id: true,
+    },
+  });
 
   return (
-    <>
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-    <Signup />
-      </div>
-    </>
+    <div>
+      <h1>Users</h1>
+        <Tasks
+             />
+        {users.map((user) => (
+          <li key={user.id}>{user.name ?? 'No name available'}</li>
+        ))}
+    </div>
   );
 }
+
