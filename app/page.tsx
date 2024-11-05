@@ -1,27 +1,15 @@
 import prisma from './lib/prisma';
+import TasksPage from './components/Tasks';
 
-interface UserName {
-  name: string | null;
-  id: number | null; 
-}
-
-export default async function UsersPage(){
-  const users: UserName[] = await prisma.user.findMany({
+export default async function Home() {
+  const tasks = await prisma.task.findMany({
     select: {
-      name: true,
+      title: true,
       id: true,
+      desc: true,
+      points: true,
     },
   });
 
-  return (
-    <div>
-      <h1>Users</h1>
-        <Tasks
-             />
-        {users.map((user) => (
-          <li key={user.id}>{user.name ?? 'No name available'}</li>
-        ))}
-    </div>
-  );
+  return <TasksPage tasks={tasks} />;
 }
-
